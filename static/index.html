@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MediQuery AI - RAG-Based Healthcare Assistant</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="glass-bg-glowing-dots"></div>
+    
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="brand">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-notes-medical"></i>
+                </div>
+                <div class="brand-text">
+                    <h1>MediQuery <span class="accent-text">AI</span></h1>
+                    <p class="subtitle">Multi-Agent Clinical & Policy Assistant</p>
+                </div>
+            </div>
+            
+            <div class="system-status">
+                <span class="status-indicator online"></span>
+                <span class="status-label">Active Agents Online</span>
+            </div>
+        </header>
+        
+        <!-- Stats Counter Ribbon -->
+        <section class="stats-ribbon">
+            <div class="stat-card" id="stat-patients">
+                <div class="stat-icon"><i class="fa-solid fa-hospital-user"></i></div>
+                <div class="stat-info">
+                    <h3 class="stat-value">Loading...</h3>
+                    <p class="stat-label">Total Patients</p>
+                </div>
+            </div>
+            <div class="stat-card" id="stat-admissions">
+                <div class="stat-icon"><i class="fa-solid fa-procedures"></i></div>
+                <div class="stat-info">
+                    <h3 class="stat-value">Loading...</h3>
+                    <p class="stat-label">Total Admissions</p>
+                </div>
+            </div>
+            <div class="stat-card" id="stat-doctors">
+                <div class="stat-icon"><i class="fa-solid fa-user-md"></i></div>
+                <div class="stat-info">
+                    <h3 class="stat-value">Loading...</h3>
+                    <p class="stat-label">Active Doctors</p>
+                </div>
+            </div>
+            <div class="stat-card" id="stat-billing">
+                <div class="stat-icon"><i class="fa-solid fa-file-invoice-dollar"></i></div>
+                <div class="stat-info">
+                    <h3 class="stat-value">Loading...</h3>
+                    <p class="stat-label">Avg Billing</p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Main Layout Split -->
+        <main class="dashboard-main">
+            <!-- Left Side: Interactive Chat Agent -->
+            <section class="chat-section">
+                <div class="section-header">
+                    <h2><i class="fa-solid fa-comments"></i> Conversational Workspace</h2>
+                    <span class="badge">Orchestrator v2.0</span>
+                </div>
+                
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message assistant">
+                        <div class="avatar"><i class="fa-solid fa-robot"></i></div>
+                        <div class="message-content">
+                            <p>Hello! I am the **MediQuery AI** assistant. I have unified access to both:
+                            1. **Structured Patient Database** (e.g., patient details, test results, doctor assignments, billing data).
+                            2. **Unstructured Policy Documents** (e.g., admissions, billing, discharge protocols, insurance requirements).
+                            
+                            How can I help you today?</p>
+                            <div class="message-meta">System initialized • Ready</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <form class="chat-input-area" id="chat-form">
+                    <input type="text" id="query-input" placeholder="Query patient database or ask policy questions..." autocomplete="off" required>
+                    <button type="submit" class="send-btn">
+                        <span>Send Query</span>
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </form>
+            </section>
+            
+            <!-- Right Side: Orchestrator Pipeline Visualizer & Decisions Log -->
+            <section class="visualizer-section">
+                <!-- Visual Pipeline Tracker -->
+                <div class="visualizer-card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-network-wired"></i> Routing Engine Visualizer</h3>
+                    </div>
+                    <div class="pipeline-flow">
+                        <div class="flow-step active" id="step-query">
+                            <div class="step-icon"><i class="fa-solid fa-keyboard"></i></div>
+                            <span class="step-name">User Query</span>
+                        </div>
+                        <div class="flow-connector"><i class="fa-solid fa-chevron-right"></i></div>
+                        <div class="flow-step" id="step-orchestrator">
+                            <div class="step-icon"><i class="fa-solid fa-compass"></i></div>
+                            <span class="step-name">Orchestrator</span>
+                        </div>
+                        <div class="flow-connector"><i class="fa-solid fa-chevron-right"></i></div>
+                        <div class="flow-step" id="step-agent">
+                            <div class="step-icon" id="step-agent-icon"><i class="fa-solid fa-robot"></i></div>
+                            <span class="step-name" id="step-agent-name">Selected Agent</span>
+                        </div>
+                        <div class="flow-connector"><i class="fa-solid fa-chevron-right"></i></div>
+                        <div class="flow-step" id="step-response">
+                            <div class="step-icon"><i class="fa-solid fa-file-waveform"></i></div>
+                            <span class="step-name">Formatter</span>
+                        </div>
+                    </div>
+                    <div class="pipeline-detail" id="pipeline-status">
+                        System idle. Awaiting user input to begin tracing routing path.
+                    </div>
+                </div>
+                
+                <!-- Sample Queries -->
+                <div class="visualizer-card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-lightbulb"></i> Recommended Queries</h3>
+                    </div>
+                    <div class="sample-queries-list">
+                        <button class="sample-query-btn" data-query="How many diabetic patients were admitted last month?">
+                            <span class="query-tag sql-tag">SQL</span>
+                            <span class="query-text">How many diabetic patients were admitted last month?</span>
+                        </button>
+                        <button class="sample-query-btn" data-query="Which patients have abnormal test results?">
+                            <span class="query-tag sql-tag">SQL</span>
+                            <span class="query-text">Which patients have abnormal test results?</span>
+                        </button>
+                        <button class="sample-query-btn" data-query="Show the average billing amount by insurance provider.">
+                            <span class="query-tag sql-tag">SQL</span>
+                            <span class="query-text">Average billing amount by insurance provider.</span>
+                        </button>
+                        <button class="sample-query-btn" data-query="What is the hospital discharge policy and checkout hours?">
+                            <span class="query-tag rag-tag">RAG</span>
+                            <span class="query-text">What is the hospital discharge policy and checkout hours?</span>
+                        </button>
+                        <button class="sample-query-btn" data-query="Is prior insurance approval required for surgery?">
+                            <span class="query-tag rag-tag">RAG</span>
+                            <span class="query-text">Is prior insurance approval required for surgery?</span>
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Decision Logs -->
+                <div class="visualizer-card logs-card">
+                    <div class="card-header">
+                        <h3><i class="fa-solid fa-list-check"></i> Agent Decision Log</h3>
+                    </div>
+                    <div class="logs-table-wrapper">
+                        <table class="logs-table">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>Query</th>
+                                    <th>Route</th>
+                                    <th>Latency</th>
+                                </tr>
+                            </thead>
+                            <tbody id="logs-body">
+                                <tr>
+                                    <td colspan="4" class="empty-log">No recent routing decisions.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <!-- JS Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>
